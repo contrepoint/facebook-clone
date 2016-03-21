@@ -12,7 +12,12 @@ RSpec.feature "static page content", :type => :feature do
 
   scenario "should have the title 'Home'" do
     visit static_pages_home_path
-    expect(page).to have_title("#{@base_title} | Home")
+    expect(page).to have_title("#{@base_title}")
+  end
+
+  scenario "should not have a custom title" do
+  	visit 'static_pages/home'
+  	expect(page).not_to have_title("#{@base_title} | Home")
   end
 
   scenario "should have the content 'Help'" do
