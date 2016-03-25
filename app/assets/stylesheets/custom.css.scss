@@ -123,9 +123,12 @@ $grayMediumLight: #eaeaea;
 /* sidebar */
 
 aside {
+  section.user_info {
+    margin-top: 20px;
+  }
   section {
     padding: 10px 0;
-    border-top: 1px solid $grayLighter;
+    margin-top: 20px;
     &:first-child {
       border: 0;
       padding-top: 0;
@@ -148,4 +151,22 @@ aside {
 .gravatar {
   float: left;
   margin-right: 10px;
+}
+
+.gravatar_edit {
+  margin-top: 15px;
+}
+
+
+/* forms */
+
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+  @include box_sizing;
+}
+
+input {
+  height: auto !important;
 }
