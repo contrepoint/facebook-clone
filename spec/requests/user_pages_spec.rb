@@ -34,7 +34,7 @@ RSpec.feature "User Profile Page", type: :feature do
 	let(:user) { FactoryGirl.create(:test_user) }
 
 	scenario 'visit profile page' do
-  	# expect(page).to have_content(user.name)
+  	expect(page).to have_content(user.name)
   	expect(page).to have_title(user.name)
 	end
 end
