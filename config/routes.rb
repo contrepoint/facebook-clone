@@ -7,9 +7,9 @@ Rails.application.routes.draw do
   get 'signup' => 'users#new'
 
   resources :users
-  get    'login'   => 'sessions#new'
-  post   'login'   => 'sessions#create'
-  delete 'logout'  => 'sessions#destroy'
+  get    'signin'   => 'sessions#new'
+  post   'signin'   => 'sessions#create'
+  delete 'signout'  => 'sessions#destroy'
 
 
   # The priority is based upon order of creation: first created -> highest priority.
