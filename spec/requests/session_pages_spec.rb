@@ -28,7 +28,6 @@ RSpec.feature "Sign In Pages", type: :feature do
 
     click_link 'Sign Out'
     expect(page).to have_link('Sign In')
-
   end
 end
 
@@ -67,28 +66,38 @@ RSpec.feature 'authorization', type: :feature do
     # end
   end
 
-  describe "for non-signed-in users" do
-    let(:user) { FactoryGirl.create(:user) }
+	describe "for non-signed-in users" do
+	  let(:user) { FactoryGirl.create(:user) }
 
-  scenario "visiting the user index" do
-    visit users_path
-    expect(page).to have_title('Sign In')
+	  scenario "visiting the user index" do
+	    visit users_path
+	    expect(page).to have_title('Sign In')
+	  end
+
+	  scenario "friendly forwarding" do
+      visit edit_user_path(user)
+      fill_in "Email",    with: user.email
+      fill_in "Password", with: user.password
+      click_button "Sign In"
+      expect(page).to have_title('Edit user')
+		end
   end
 
-    describe "when attempting to visit a protected page" do
-      before do
-        visit edit_user_path(user)
-        fill_in "Email",    with: user.email
-        fill_in "Password", with: user.password
-        click_button "Sign In"
-      end
+  describe "as non-admin user" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:non_admin) { FactoryGirl.create(:user) }
 
-      describe "after signing in" do
-
-        it "should render the desired protected page" do
-          expect(page).to have_title('Edit user')
-        end
-      end
+    # before { sign_in non_admin, no_capybara: true } # doesn't work. can't access sign_in method
+    before do
+    	visit signin_path
+    	fill_in "Email",    with: user.email
+    	fill_in "Password", with: user.password
+    	click_button "Sign In"
     end
-   end
+
+    # describe "submitting a DELETE request to the Users#destroy action" do
+      # before { delete user_path(user) }			 # spoofing delete requests still doesn't work
+      # specify { expect(response).to redirect_to(root_url) }
+    # end
+  end
 end

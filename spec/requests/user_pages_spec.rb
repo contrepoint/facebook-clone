@@ -104,4 +104,31 @@ RSpec.feature "User Index Page", type: :feature do
       expect(page).to have_selector('li', text: user.name)
     end
   end
+
+  scenario 'delete links' do
+  	expect(page).to_not have_link('delete')
+  end
+end
+
+RSpec.feature 'admin can delete users', type: :feature do
+#   # after(:all)  { User.delete_all }
+
+  before do
+  	FactoryGirl.create(:admin)
+  	FactoryGirl.create(:test_user)
+  	visit signin_path
+#   	# byebug
+    fill_in "Email",    with: 'admin@example.com'
+    fill_in "Password", with: '123456'
+    click_button "Sign In"
+    visit users_path
+    expect(page).to have_link('Sign Out')
+  end
+
+  scenario 'can delete user' do
+    expect(page).to have_link('delete')
+#     byebug
+    # expect { click_link('delete', match: :first).to change(User, :count).by(-1) } # passes even when there's no code?!?!?
+#     byebug
+    end
 end
