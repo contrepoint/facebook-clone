@@ -26,6 +26,11 @@ RSpec.feature "User Sign Up", type: :feature do
     fill_in "Password",     with: "123456"
     fill_in "Confirmation", with: "123456"
     expect { click_button submit }.to change(User, :count).by(1)
+
+        expect(page).to have_link('Sign Out')
+        expect(page).to have_title('John Doe')
+        expect(page).to have_selector('div.alert.alert-success', text: 'Welcome')
+      # end
   end
 end
 
