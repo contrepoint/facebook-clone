@@ -4,7 +4,7 @@ require 'rails_helper'
    @base_title = "Ruby on Rails Tutorial Sample App"
   end
 
-RSpec.feature 'static page content', :type => :feature do
+RSpec.feature 'home page content', :type => :feature do
 	background { visit root_path }
 
 	  scenario "should have the content 'Sample App'" do
@@ -19,6 +19,26 @@ RSpec.feature 'static page content', :type => :feature do
 	  	expect(page).not_to have_title("#{@base_title} | Home")
 	  end
 end
+
+    describe "for signed-in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+        FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+        FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+              visit signin_path
+      fill_in "Email",    with: user.email
+      fill_in "Password", with: user.password
+      click_button "Sign In"
+
+        visit root_path
+      end
+
+      it "should render the user's feed" do
+        user.feed.each do |item|
+          expect(page).to have_selector("li##{item.id}", text: item.content)
+        end
+      end
+    end
 
 RSpec.feature 'help page content', :type => :feature do
 	background { visit help_path }

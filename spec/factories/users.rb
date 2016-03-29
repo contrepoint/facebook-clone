@@ -41,4 +41,5 @@ factory :admin, class: User do
     password_confirmation "123456"
     admin 'true'
 	end
+
 end

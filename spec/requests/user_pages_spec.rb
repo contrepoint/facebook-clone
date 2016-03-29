@@ -35,13 +35,22 @@ RSpec.feature "User Sign Up", type: :feature do
 end
 
 RSpec.feature "User Profile Page", type: :feature do
-	background { visit user_path(user) }
-	let(:user) { FactoryGirl.create(:test_user) }
+	let(:user) { FactoryGirl.create(:user) }
+	let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+  let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+  background { visit user_path(user) }
 
 	scenario 'visit profile page' do
   	expect(page).to have_content(user.name)
   	expect(page).to have_title(user.name)
+  	expect(m1.user.name).to equal(user.name)
 	end
+
+  scenario "microposts" do
+    expect(page).to have_content(m1.content)
+    expect(page).to have_content(m2.content)
+    expect(page).to have_content(user.microposts.count)
+  end
 end
 
 
