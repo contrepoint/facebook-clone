@@ -43,3 +43,40 @@ RSpec.feature "User Profile Page", type: :feature do
   	expect(page).to have_title(user.name)
 	end
 end
+
+
+RSpec.feature "User Edit Page", type: :feature do
+	let(:user) { FactoryGirl.create(:test_user) }
+	background {    visit signin_path
+    fill_in "Email",    with: user.email
+    fill_in "Password", with: user.password
+    click_button "Sign In"
+ }
+	let(:new_name) { 'new name' }
+	let(:new_email) { 'new_email@example.com' }
+	background { visit edit_user_path(user) }
+
+	scenario 'visit edit page' do
+  	expect(page).to have_content('Update your profile')
+  	expect(page).to have_title('Edit user')
+  	expect(page).to have_link('change', href: 'http://gravatar.com/emails')
+	end
+
+	scenario 'with valid information' do
+    fill_in "Name",             with: new_name
+    fill_in "Email",            with: new_email
+    fill_in "Password",         with: user.password
+    fill_in "Confirm Password", with: user.password
+    click_button "Save changes"
+    expect(page).to have_title(new_name)
+    expect(page).to have_selector('div.alert.alert-success')
+    expect(page).to have_link('Sign Out', href: signout_path)
+    expect(user.reload.name).to  eq new_name
+    expect(user.reload.email).to eq new_email
+	end
+
+	scenario "with invalid information" do
+    click_button "Save changes"
+    expect(page).to have_content('error')
+  end
+end

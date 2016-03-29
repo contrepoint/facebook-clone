@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature "Sign In Pages", type: :feature do
-	background { visit login_path }
+	background { visit signin_path }
 	let(:user) { FactoryGirl.create(:test_user) }
 
 	scenario 'visit signin page' do
@@ -21,8 +21,9 @@ RSpec.feature "Sign In Pages", type: :feature do
 
     expect(page).to have_title(user.name)
     expect(page).to have_link('Profile', href: user_path(user))
-    expect(page).to have_link('Sign Out', href: logout_path)
-    expect(page).not_to have_link('Sign In', href: login_path)
+    expect(page).to have_link('Settings', href: edit_user_path(user))
+    expect(page).to have_link('Sign Out', href: signout_path)
+    expect(page).not_to have_link('Sign In', href: signin_path)
 
     click_link 'Sign Out'
     expect(page).to have_link('Sign In')
