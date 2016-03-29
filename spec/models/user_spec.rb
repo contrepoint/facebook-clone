@@ -12,6 +12,8 @@ RSpec.describe User, type: :model do
   	it { is_expected.to respond_to(:password_confirmation) }
   	it { is_expected.to respond_to(:authenticate)}
   	it { is_expected.to respond_to(:admin)}
+  	it { is_expected.to respond_to(:microposts)}
+  	it { is_expected.to respond_to(:feed)}
   	it { is_expected.to respond_to(:remember_token)}
   	it { is_expected.to be_valid }
   	it { is_expected.not_to be_admin }
@@ -111,6 +113,37 @@ RSpec.describe User, type: :model do
       user.email = mixed_case_email
       user.save
       expect(user.reload.email).to eq mixed_case_email.downcase
+    end
+  end
+
+  describe "micropost associations" do
+
+    before { user.save }
+    let!(:older_micropost) do
+      FactoryGirl.create(:micropost, user: user, created_at: 1.day.ago)
+    end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: user, created_at: 1.hour.ago)
+    end
+
+    it "should destroy associated microposts" do
+      microposts = user.microposts.to_a
+      user.destroy
+      expect(microposts).not_to be_empty
+      microposts.each do |micropost|
+        expect(Micropost.where(id: micropost.id)).to be_empty
+      end
+    end
+
+    describe "status" do
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+      it 'microposts' do
+      user.feed { should include(newer_micropost) }
+      user.feed { should include(older_micropost) }
+      user.feed { should_not include(unfollowed_post) }
+    end
     end
   end
 end
