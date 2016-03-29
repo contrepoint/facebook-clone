@@ -11,3 +11,5 @@ def sign_in(user, options={})
     click_button "Sign in"
   end
 end
+
+# this file/method isn't being accessed not sure why
