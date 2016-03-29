@@ -20,6 +20,7 @@ RSpec.feature "Sign In Pages", type: :feature do
     click_button "Sign In"
 
     expect(page).to have_title(user.name)
+    expect(page).to have_link('Users', href: users_path)
     expect(page).to have_link('Profile', href: user_path(user))
     expect(page).to have_link('Settings', href: edit_user_path(user))
     expect(page).to have_link('Sign Out', href: signout_path)
@@ -68,6 +69,11 @@ RSpec.feature 'authorization', type: :feature do
 
   describe "for non-signed-in users" do
     let(:user) { FactoryGirl.create(:user) }
+
+  scenario "visiting the user index" do
+    visit users_path
+    expect(page).to have_title('Sign In')
+  end
 
     describe "when attempting to visit a protected page" do
       before do

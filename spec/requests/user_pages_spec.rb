@@ -80,3 +80,28 @@ RSpec.feature "User Edit Page", type: :feature do
     expect(page).to have_content('error')
   end
 end
+
+RSpec.feature "User Index Page", type: :feature do
+	let(:user) { FactoryGirl.create(:test_user) }
+	before(:all) { 30.times { FactoryGirl.create(:user) } }
+  after(:all)  { User.delete_all }
+
+	before do
+      FactoryGirl.create(:user, name: "Bob", email: "bob@example.com")
+      FactoryGirl.create(:user, name: "Ben", email: "ben@example.com")
+      visit signin_path
+      fill_in "Email",    with: user.email
+      fill_in "Password", with: user.password
+      click_button "Sign In"
+      visit users_path
+    end
+
+  scenario "index" do
+    expect(page).to have_title('All users')
+    expect(page).to have_content('All users')
+    expect(page).to have_selector('div.pagination')
+    User.paginate(page: 1).each do |user|
+      expect(page).to have_selector('li', text: user.name)
+    end
+  end
+end
