@@ -11,6 +11,7 @@ RSpec.describe User, type: :model do
   	it { is_expected.to respond_to(:password) }
   	it { is_expected.to respond_to(:password_confirmation) }
   	it { is_expected.to respond_to(:authenticate)}
+  	it { is_expected.to respond_to(:remember_token)}
   	it { is_expected.to be_valid }
   end
 
@@ -71,6 +72,11 @@ RSpec.describe User, type: :model do
 		it { is_expected.not_to be_valid }
   end
 
+  # Doesn't work - listing 8.18
+  # describe "remember token" do
+    # subject { user }
+    # it { expect(@user.remember_token).not_to be_blank }
+  # end
   # Tests not present - testing for valid authentication, doing some of the exercises
 	  # describe "return value of authenticate method" do
 	  # before { user.save }
